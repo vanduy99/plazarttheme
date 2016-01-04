@@ -1,0 +1,62 @@
+<?php get_header(); ?>
+<?php get_template_part('template_inc/inc','menu'); ?>
+<section class="container home-post">
+    <div class="row">
+        <div class="col-md-9">
+            <h1 class="tzarchive"><?php echo  get_search_query() ; ?></h1>
+            <?php
+            if ( have_posts() ) : while (have_posts()) : the_post() ;
+                $plazarttheme_post_type = get_post_type( $post -> ID );
+                ?>
+                <article id='post-<?php the_ID(); ?>' class="post-item">
+                    <?php the_post_thumbnail(); ?>
+                    <h3><a href="<?php the_permalink() ?>"><?php the_title(); ?></a></h3>
+                    <?php if ( get_the_tags () !=  false || get_the_terms( $post -> ID, 'portfolio-tags' ) != false ): ?>
+                    <div class="tztag">
+                        TAG:
+                        <?php
+                        if ( $plazarttheme_post_type == 'post' ):
+                            the_tags( '',',','' ) ;
+                        else:
+                            the_terms( $post -> ID, 'portfolio-tags','',',' ) ;
+                        endif;
+                        ?>
+                    </div>
+                    <?php endif; ?>
+                    <div class="tzcat">
+                        CATEGORY :
+                        <?php
+                        if ( $plazarttheme_post_type == 'post' ):
+                            the_category(',',',','' ) ;
+                        else:
+                            the_terms( $post -> ID, 'portfolio-category','',',' ) ;
+                        endif;
+                        ?>
+
+                    </div>
+                    <div class="description">
+                        <?php the_excerpt(); ?>
+                    </div>
+                </article>
+                <?php
+            endwhile; // end while ( have_posts )
+            else:
+            ?>
+                <div>
+                    <h5><?php echo _('Not Data', 'plazarttheme') ; ?></h5>
+                    <a href="<?php echo esc_url(get_home_url('/')); ?>"><?php esc_html_e('Go to Home','plazarttheme'); ?></a>
+                </div>
+            <?php
+            endif; // end if ( have_posts )
+            ?>
+            <?php plazarttheme_paging_nav() ?>
+        </div>
+        <div class="col-md-3 tzsidebar">
+            <?php get_sidebar(); ?>
+        </div>
+    </div>
+</section>
+<?php
+get_footer();
+?>
+
